@@ -2,3 +2,5 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^Dockerfile$
+^app\.R$
+^rsconnect$
