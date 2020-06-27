@@ -2,9 +2,13 @@
 # Carregar pacotes:
 library(tidyverse)
 library(tidyquant)
+library(quantmod)
 library(tsibble)
 library(knitr)
 library(kableExtra)
+library(timetk)
+library(highcharter)
+library(tidyr)
 
 porcentagem <- function(x){paste0(round(x,2), "%")} 
 moeda_real <- function(x){
@@ -12,7 +16,7 @@ moeda_real <- function(x){
                         nsmall = 2, digits = 2))}
 
 # Acoes do portfolio 
-portifolio <- tibble::tribble(
+portifolio <- tribble(
   ~symbol, ~cot_ini, ~qtd,
   "PETR4.SA" , 13, 100,
   "GOAU4.SA" , 7.12, 100,
