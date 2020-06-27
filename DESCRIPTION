@@ -8,7 +8,14 @@ Imports:
     config,
     golem,
     shiny,
-    htmltools,
+    htmltools
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
+VignetteBuilder: knitr
+Suggests: 
+    rmarkdown
+Depends: 
     purrr,
     dplyr,
     lubridate,
@@ -21,9 +28,3 @@ Imports:
     knitr,
     kableExtra,
     highcharter
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 6.1.1
-VignetteBuilder: knitr
-Suggests: 
-    rmarkdown

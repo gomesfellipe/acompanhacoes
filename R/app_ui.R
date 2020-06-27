@@ -1,3 +1,5 @@
+source("R/app_global.R")
+
 #' The application User-Interface
 #' 
 #' @param request Internal parameter for `{shiny}`. 
@@ -9,8 +11,15 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # List the first level UI elements here 
-    fluidPage(
-      h1("acompanhacoes")
+    pageWithSidebar(
+      headerPanel('Acompanhamento de Ações'),
+      sidebarPanel(
+        selectInput('portifolio', 'Stocks', unique(portifolio$symbol))
+      ),
+      mainPanel(
+        highchartOutput('plot1'),
+        tableOutput("tab_financeira")
+      )
     )
   )
 }

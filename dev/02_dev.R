@@ -15,18 +15,18 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
-usethis::use_package( "purrr" )
-usethis::use_package( "dplyr" )
-usethis::use_package( "lubridate" )
-usethis::use_package( "stringr" )
-usethis::use_package( "tidyr" )
-usethis::use_package( "tsibble" )
-usethis::use_package( "tidyquant" )
-usethis::use_package( "quantmod" )
-usethis::use_package( "timetk" )
-usethis::use_package( "knitr" )
-usethis::use_package( "kableExtra" )
-usethis::use_package( "highcharter" )
+usethis::use_package( "purrr", type = "Depends" )
+usethis::use_package( "dplyr", type = "Depends"  )
+usethis::use_package( "lubridate", type = "Depends"  )
+usethis::use_package( "stringr", type = "Depends"  )
+usethis::use_package( "tidyr", type = "Depends"  )
+usethis::use_package( "tsibble", type = "Depends"  )
+usethis::use_package( "tidyquant", type = "Depends"  )
+usethis::use_package( "quantmod", type = "Depends"  )
+usethis::use_package( "timetk", type = "Depends"  )
+usethis::use_package( "knitr", type = "Depends"  )
+usethis::use_package( "kableExtra", type = "Depends"  )
+usethis::use_package( "highcharter", type = "Depends"  )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -61,8 +61,8 @@ devtools::build_vignettes()
 ## Code coverage ----
 ## (You'll need GitHub there)
 usethis::use_github()
-usethis::use_travis()
-usethis::use_appveyor()
+# usethis::use_travis()
+# usethis::use_appveyor()
 
 # You're now set! ----
 # go to dev/03_deploy.R
