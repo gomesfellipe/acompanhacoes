@@ -32,3 +32,15 @@ Veja como é a tela do dashboard:
 
 ![](inst/app/www/dashboard.gif)
 
+A tabela financeira informa: 
+
+* Montagem (valores no momento da compra)
+    * `Cotação inicio`: Valor do ativo na compra
+    * `Quantidade`: Quantidade de lotes compradas
+    * `Volume Inicio`: Volume total da compra
+* Desmontagem (valores no momento da venda)
+    * `Cotação Atual`: Valor do ativo no momento atual
+    * `Volume Atual`: Volume total atual 
+* Resultado
+    * `Ganho/Perda`: Valor de ganho/perda caso venda hoje
+    * `Resultado Bruto`: A razão entre o ganho/perda sobre o volume investido incialmente

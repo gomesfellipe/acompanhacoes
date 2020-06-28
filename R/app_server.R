@@ -116,6 +116,9 @@ app_server <- function( input, output, session ) {
         resultado_bruto = cell_spec(porcentagem(resultado_bruto), "html",
                                     color = ifelse(resultado_bruto > 0, 
                                                    "green", "red"))) %>% 
+      `colnames<-`(c("Ativo", "Cotação inicio", "Quantidade",
+                     "Volume Inicio", "Cotação atual", "Voluma atual",
+                     "Ganho/Perda", "Resutado Bruto", "Status")) %>% 
       kable(format = "html", escape = F) %>%
       kable_styling(c("bordered", "hover", "responsive"), 
                     full_width = T, font_size = 12) %>%
