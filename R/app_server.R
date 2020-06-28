@@ -6,20 +6,8 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   
-
-# Download exemplo de input -----------------------------------------------
-
-  output$input_test <- downloadHandler(
-      filename = function() {
-        "input_test.txt"
-      },
-      content = function(con) {
-        read.csv("inst/app/www/input_test.txt") %>% write.csv(con, row.names = F)
-      }
-    )
   # Leitura dos dados -------------------------------------------------------
   
-  # Acoes do portfolio 
   portifolio <- reactive({
     
     read.csv(input$portifolio_file$datapath, stringsAsFactors = F) %>% 
@@ -37,15 +25,21 @@ app_server <- function( input, output, session ) {
   
   # Requisicao  -------------------------------------------------------------
   
-  # request data
   stocks <-
     reactive({
       req(input$portifolio_file)
       
       first_day_year <- Sys.Date() %>% `day<-`(1) %>% `month<-`(1)
       
-      map_df(unique(portifolio()$symbol),
-             ~tq_get(.x, get = "stock.prices", from = first_day_year))
+      request <- tryCatch({
+        map_df(unique(portifolio()$symbol),
+               ~tq_get(.x, get = "stock.prices", from = first_day_year))  
+      }, error = function(e){
+        Sys.sleep(2)
+        map_df(unique(portifolio()$symbol),
+               ~tq_get(.x, get = "stock.prices", from = first_day_year))  
+      })
+      
     })
   
   # Selecionar acao ---------------------------------------------------------
@@ -128,5 +122,16 @@ app_server <- function( input, output, session ) {
       add_header_above(c(" ", "Montagem" = 3,
                          "Desmontagem / Atual" = 2, "Resultado" = 3))
   }
+  
+  # Download exemplo de input -----------------------------------------------
+  
+  output$input_test <- downloadHandler(
+    filename = function() {
+      "input_test.txt"
+    },
+    content = function(con) {
+      read.csv("inst/app/www/input_test.txt") %>% write.csv(con, row.names = F)
+    }
+  )
   
 }
