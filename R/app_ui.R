@@ -1,5 +1,3 @@
-source("R/app_global.R")
-
 #' The application User-Interface
 #' 
 #' @param request Internal parameter for `{shiny}`. 
@@ -14,11 +12,21 @@ app_ui <- function(request) {
     pageWithSidebar(
       headerPanel('Acompanhamento de Ações'),
       sidebarPanel(
-        selectInput('portifolio', 'Stocks', unique(portifolio$symbol))
+        fileInput("portifolio_file", "Insira os dados do portifólio aqui"),
+        helpText("O input deve ser um arquivo .txt com o seguinte formato:", br(),
+                tags$code(
+                  "symbol,   cot_ini, qtd", br(),
+                  " TUPY3.SA, 24.42, 200", br(),
+                  " ELET3.SA, 19.73, 150", br(),
+                  " BTC-USD,  31747.38, 0.032"),br(),
+                tags$small("(Você pode copiar e colar essa entrada em um arquivo .txt para usar como exemplo)")  
+                ),
+        uiOutput("selecionar_stock"),
+        bookmarkButton()
       ),
       mainPanel(
-        highchartOutput('plot1'),
-        tableOutput("tab_financeira")
+        highchartOutput('plot1')%>% withSpinner(),
+        tableOutput("tab_financeira")%>% withSpinner()
       )
     )
   )

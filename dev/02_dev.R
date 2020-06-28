@@ -15,6 +15,7 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
+usethis::use_package( "shinyWidgets", type = "Depends" )
 usethis::use_package( "purrr", type = "Depends" )
 usethis::use_package( "dplyr", type = "Depends"  )
 usethis::use_package( "lubridate", type = "Depends"  )

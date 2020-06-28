@@ -28,4 +28,6 @@ Depends:
     timetk,
     knitr,
     kableExtra,
-    highcharter
+    highcharter,
+    shinycssloaders,
+    shinyWidgets

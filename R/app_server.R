@@ -7,14 +7,44 @@
 app_server <- function( input, output, session ) {
   
   
+  # Leitura dos dados -------------------------------------------------------
+  
+  # Acoes do portfolio 
+  portifolio <- reactive({
+    
+    read.csv(input$portifolio_file$datapath, stringsAsFactors = F) %>% 
+      as_tibble() %>% 
+      mutate_all(~ .x %>% str_trim() %>% str_squish()) %>% 
+      mutate_at(c("cot_ini", "qtd"), as.numeric)  
+    
+  })
+  
+  output$selecionar_stock <-  renderUI({
+    req(input$portifolio_file$datapath)
+    selectInput('stock', 'Stocks', unique(portifolio()$symbol))
+  })
+  
+  
+  # Requisicao  -------------------------------------------------------------
+  
+  # request data
+  stocks <-
+    reactive({
+      req(input$portifolio_file)
+      
+      map_df(unique(portifolio()$symbol),
+             ~tq_get(.x, get = "stock.prices", from = "2019-01-01"))
+    })
+  
   # Selecionar acao ---------------------------------------------------------
   
   output$plot1 <- renderHighchart({
+    req(input$portifolio_file)
     
-    stocks %>% 
-      filter(symbol == input$portifolio) %>%
+    stocks() %>% 
+      filter(symbol == input$stock) %>%
       timetk::tk_xts(date_var = date) %>% 
-      highcharter::hchart()
+      highcharter::hchart() 
     
   })
   
@@ -22,7 +52,9 @@ app_server <- function( input, output, session ) {
   
   # converter para tsibble
   tbl_stocks <- reactive({
-    stocks %>%
+    req(input$portifolio_file)
+    
+    stocks() %>%
       as_tsibble(key = symbol, index = date) %>% 
       fill_gaps() %>% 
       tidyr::fill(c(open, high, low, close, volume, adjusted),
@@ -32,6 +64,8 @@ app_server <- function( input, output, session ) {
   # obter dados do ultimo dia
   fechamento_ultimo_dia <- 
     reactive({
+      req(input$portifolio_file)
+      
       tbl_stocks() %>% 
         filter(date == case_when(wday(Sys.Date()) == 7 ~ Sys.Date()-1,
                                  wday(Sys.Date()) == 1 ~ Sys.Date()-2,
@@ -43,7 +77,7 @@ app_server <- function( input, output, session ) {
   # Criar tabela financeita
   tab_financeira <- 
     reactive({
-      left_join(portifolio, fechamento_ultimo_dia()) %>% 
+      left_join(portifolio(), fechamento_ultimo_dia()) %>% 
         select(date, everything()) %>% 
         mutate(cot_atual = if_else(symbol == "BTC-USD",
                                    cot_atual * quantmod::getQuote("USDBRL=X")[1,"Open"], 
@@ -59,6 +93,7 @@ app_server <- function( input, output, session ) {
   
   # Tabela financeira
   output$tab_financeira <- function(){
+    req(input$portifolio_file)
     
     tab_financeira() %>%
       mutate(
@@ -76,7 +111,7 @@ app_server <- function( input, output, session ) {
                                     color = ifelse(resultado_bruto > 0, 
                                                    "green", "red"))) %>% 
       kable(format = "html", escape = F) %>%
-      kable_styling(c("striped", "bordered", "hover", "responsive"), 
+      kable_styling(c("bordered", "hover", "responsive"), 
                     full_width = T, font_size = 12) %>%
       add_header_above(c(" ", "Montagem" = 3,
                          "Desmontagem / Atual" = 2, "Resultado" = 3))
