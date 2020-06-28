@@ -13,19 +13,14 @@ app_ui <- function(request) {
       headerPanel('Acompanhamento de Ações'),
       sidebarPanel(
         fileInput("portifolio_file", "Insira os dados do portifólio aqui"),
-        helpText("O input deve ser um arquivo .txt com o seguinte formato:", br(),
-                tags$code(
-                  "symbol,   cot_ini, qtd", br(),
-                  " TUPY3.SA, 24.42, 200", br(),
-                  " ELET3.SA, 19.73, 150", br(),
-                  " BTC-USD,  31747.38, 0.032"),br(),
-                tags$small("(Você pode copiar e colar essa entrada em um arquivo .txt para usar como exemplo)")  
-                ),
-        uiOutput("selecionar_stock"),
-        bookmarkButton()
+        helpText(tags$b("Ajuda:")),
+        downloadLink("input_test", "Exemplo de input"),
+        uiOutput("selecionar_stock")
       ),
       mainPanel(
-        highchartOutput('plot1')%>% withSpinner(),
+        h2("Série Histórica:"),br(),
+        highchartOutput('plot1')%>% withSpinner(), br(),
+        h2("Tabela Financeira"),
         tableOutput("tab_financeira")%>% withSpinner()
       )
     )

@@ -6,7 +6,17 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   
-  
+
+# Download exemplo de input -----------------------------------------------
+
+  output$input_test <- downloadHandler(
+      filename = function() {
+        "input_test.txt"
+      },
+      content = function(con) {
+        read.csv("inst/app/www/input_test.txt") %>% write.csv(con, row.names = F)
+      }
+    )
   # Leitura dos dados -------------------------------------------------------
   
   # Acoes do portfolio 
