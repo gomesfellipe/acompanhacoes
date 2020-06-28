@@ -26,4 +26,5 @@ Depends:
     knitr,
     kableExtra,
     highcharter,
-    shinycssloaders
+    shinycssloaders,
+    shinyWidgets
