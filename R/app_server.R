@@ -133,7 +133,7 @@ app_server <- function( input, output, session ) {
       "input_test.txt"
     },
     content = function(con) {
-      read.csv("inst/app/www/input_test.txt") %>% write.csv(con, row.names = F)
+      input_exemplo %>% write.csv(con, row.names = F)
     }
   )
   
