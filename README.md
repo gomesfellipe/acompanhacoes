@@ -32,6 +32,8 @@ Veja como é a tela do dashboard:
 
 ![](inst/app/www/dashboard.gif)
 
+<small>[Link para testar o app na web](<small>)</small>
+
 A tabela financeira informa: 
 
 * Montagem (valores no momento da compra)
