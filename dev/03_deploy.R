@@ -30,7 +30,7 @@ golem::add_shinyappsio_file()
 ## If you want to deploy via a generic Dockerfile
 golem::add_dockerfile()
 
-## If you want to deploy to ShinyProxy
+ta ## If you want to deploy to ShinyProxy
 # golem::add_dockerfile_shinyproxy()
 
 ## If you want to deploy to Heroku
