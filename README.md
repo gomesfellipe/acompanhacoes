@@ -26,5 +26,5 @@ run_app()
 
 Veja como é a tela do dashboard:
 
-![](inst/app/www/dashboard.png)
+![](inst/app/www/dashboard.gif)
 

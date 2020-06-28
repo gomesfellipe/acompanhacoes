@@ -1,4 +1,0 @@
-symbol, cot_ini, qtd 
-TUPY3.SA, 24.42, 200 
-ELET3.SA, 19.73, 150 
-BTC-USD, 31747.38, 0.032
