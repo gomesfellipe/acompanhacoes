@@ -13,9 +13,11 @@ app_ui <- function(request) {
       headerPanel('Acompanhamento de Ações'),
       sidebarPanel(
         fileInput("portifolio_file", "Insira os dados do portifólio aqui"),
-        helpText(tags$b("Ajuda:")),
-        downloadLink("input_test", "Exemplo de input"),
-        uiOutput("selecionar_stock")
+        uiOutput("selecionar_stock"),
+        tags$b("Ajuda:"), downloadLink("input_test", "Exemplo de input"), br(),
+        tags$p(tags$b("Código Fonte: "), tags$a(href = "https://github.com/gomesfellipe/acompanhacoes",
+                                      "github.com/gomesfellipe/acompanhacoes")) 
+        
       ),
       mainPanel(
         h2("Série Histórica:"),br(),
