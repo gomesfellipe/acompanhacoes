@@ -19,10 +19,10 @@ RUN Rscript -e 'remotes::install_version("timetk",upgrade="never", version = "0.
 RUN Rscript -e 'remotes::install_version("knitr",upgrade="never", version = "1.28")'
 RUN Rscript -e 'remotes::install_version("kableExtra",upgrade="never", version = "1.1.0")'
 RUN Rscript -e 'remotes::install_version("highcharter",upgrade="never", version = "0.7.0")'
-RUN Rscript -e 'remotes::install_version("rmarkdown",upgrade="never", version = "2.1")'
+RUN Rscript -e 'remotes::install_version("shinycssloaders",upgrade="never", version = "0.3")'
 RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone
 RUN R -e 'remotes::install_local(upgrade="never")'
 EXPOSE 80
-CMD R -e "options('shiny.port'=80,shiny.host='0.0.0.0');acompanhacoes::run_app()"
+CMD R -e "options('shiny.port'=80,shiny.host='0.0.0.0');library(acompanhacoes);run_app()"
