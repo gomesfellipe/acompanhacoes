@@ -42,8 +42,10 @@ app_server <- function( input, output, session ) {
     reactive({
       req(input$portifolio_file)
       
+      first_day_year <- Sys.Date() %>% `day<-`(1) %>% `month<-`(1)
+      
       map_df(unique(portifolio()$symbol),
-             ~tq_get(.x, get = "stock.prices", from = "2019-01-01"))
+             ~tq_get(.x, get = "stock.prices", from = first_day_year))
     })
   
   # Selecionar acao ---------------------------------------------------------
