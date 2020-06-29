@@ -38,12 +38,6 @@ Veja como é a tela do dashboard:
 Para obter um exemplo de input para o dashboard, consulte os dados do pacote:
 
 ```
-acompanhacoes::input_exemplo
-```
-
-Contém o seguinte conteúdo:
-
-```
 > acompanhacoes::input_exemplo
 # A tibble: 3 x 3
   symbol   cot_ini     qtd
