@@ -102,6 +102,7 @@ app_server <- function( input, output, session ) {
     req(input$portifolio_file)
     
     tab_financeira() %>%
+      mutate_all(~ifelse(is.na(.x), 0, .x)) %>% 
       mutate(
         cot_ini = moeda_real(cot_ini),
         cot_atual = moeda_real(cot_atual),
