@@ -75,7 +75,8 @@ app_server <- function( input, output, session ) {
       tbl_stocks() %>% 
         filter(date == case_when(wday(Sys.Date()) == 7 ~ Sys.Date()-1,
                                  wday(Sys.Date()) == 1 ~ Sys.Date()-2,
-                                 T ~ Sys.Date())) %>% 
+                                 wday(Sys.Date()) == 2 ~ Sys.Date()-3,
+                                 T ~ Sys.Date() - 1)) %>% 
         select(symbol, cot_atual = close)
       
     })

@@ -7,7 +7,7 @@ Este dashboard é uma POC ([proof of concept](https://en.wikipedia.org/wiki/Proo
 
 O app shiny foi desenvolvido utilizando o framework [`golem`](https://thinkr-open.github.io/golem/index.html) que trás uma série de configurações que facilitam na hora de implementar o app em desenvolvimento. O app possui um script [Dockerfile](https://github.com/gomesfellipe/acompanhacoes/blob/master/Dockerfile) que é gerado automaticamente utilizando a função `golem::add_dockerfile()`.
 
-Os dados são obtidos no momento do input do portifólio, utilizando a funcao `tidyquant::tq_get("<stocks>", get = "stock.prices", from = first_day_year)` que coleta os dados da api do [Yahoo Finance](https://finance.yahoo.com/).
+Os dados são obtidos no momento do input do portifólio, utilizando a funcao `tidyquant::tq_get("<stocks>", get = "stock.prices", from = first_day_year)` que coleta os dados da api do [Yahoo Finance](https://finance.yahoo.com/) das cotações do dia anterior. 
 
 Sinta-se a vontade para utilizar, reproduzir e modificar o código. O dashboard esta em desenvolvimento e qualquer ajuda será bem vinda!
 
@@ -62,3 +62,9 @@ A tabela financeira informa:
 * Resultado
     * `Ganho/Perda`: Valor de ganho/perda caso venda hoje
     * `Resultado Bruto`: A razão entre o ganho/perda sobre o volume investido incialmente
+
+
+## Limitações e próximos passos
+
+A api fornecida pelo pacote `tidyquant` fornece apenas os dados do dia anterior. A api so tei [AlphaVantage](https://www.alphavantage.co/) pode ser uma opção para a coleta dos dados das cotações em tempo real porém, como esta api necessita de uma chave de acesso particular para seu uso, Esta implementação ficará para atualizações futuras. (idéias de implementações são bem vindas, caso tenha alguma idéia abra uma issue ou entre em contato pois será um prazer pensar em uma solução para isto de maneira conjunta.)
+
