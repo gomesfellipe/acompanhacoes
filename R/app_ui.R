@@ -1,6 +1,8 @@
 #' The application User-Interface
 #' 
 #' @param request Internal parameter for `{shiny}`. 
+# Sys.setenv(TZ='UTC')
+Sys.setenv(TZ = "America/Sao_Paulo")
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @noRd
@@ -20,10 +22,10 @@ app_ui <- function(request) {
         
       ),
       mainPanel(
-        h2("Tabela Financeira"),
-        tableOutput("tab_financeira")%>% withSpinner(),
         h2("Série Histórica:"),br(),
-        highchartOutput('plot1')%>% withSpinner(), br()
+        highchartOutput('plot1')%>% withSpinner(), br(),
+        h2("Tabela Financeira"),
+        tableOutput("tab_financeira")%>% withSpinner()
       )
     )
   )

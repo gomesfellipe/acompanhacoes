@@ -5,6 +5,6 @@ account: gomes555
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2510396
-bundleId: 3324638
+bundleId: 3327552
 url: https://gomes555.shinyapps.io/acompanhacoes/
-when: 1593312957.96673
+when: 1593397618.29108
