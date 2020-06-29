@@ -66,5 +66,9 @@ A tabela financeira informa:
 
 ## Limitações e próximos passos
 
-A api fornecida pelo pacote `tidyquant` fornece apenas os dados do dia anterior. A api so tei [AlphaVantage](https://www.alphavantage.co/) pode ser uma opção para a coleta dos dados das cotações em tempo real porém, como esta api necessita de uma chave de acesso particular para seu uso, Esta implementação ficará para atualizações futuras. (idéias de implementações são bem vindas, caso tenha alguma idéia abra uma issue ou entre em contato pois será um prazer pensar em uma solução para isto de maneira conjunta.)
+Limitação: A api fornecida pelo pacote `tidyquant` disponibiliza apenas os dados do **dia anterior**. 
+
+Próximos passos: A api do [AlphaVantage](https://www.alphavantage.co/) pode ser uma opção para a coleta dos dados das cotações em tempo real porém, como esta api necessita de uma chave de acesso particular para seu uso, a implementação ficará para atualizações futuras. 
+
+(idéias de implementações são bem vindas, caso tenha alguma idéia abra uma issue ou entre em contato pois será um prazer pensar em uma solução para isto de maneira conjunta.)
 
