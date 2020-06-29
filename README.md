@@ -32,7 +32,7 @@ Veja como é a tela do dashboard:
 
 ![](inst/app/www/dashboard.gif)
 
-<small>[Link para testar o app na web](gomes555.shinyapps.io/acompanhacoes)</small>
+<small>[Link para testar o app na web](https://gomes555.shinyapps.io/acompanhacoes/)</small>
 
 A tabela financeira informa: 
 
