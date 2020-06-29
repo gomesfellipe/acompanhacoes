@@ -19,20 +19,6 @@ Para instalar a versão de desenvolvimento do aplicativo execute os comandos:
 devtools::install_github("gomesfellipe/acompanhacoes", INSTALL_opts = '--no-lock')
 ```
 
-## Uso
-
-Após instalar o pacote, execute os comandos para executar o dashboard no R:
-
-``` r
-library(acompanhacoes)
-run_app()
-```
-Veja como é a tela do dashboard:
-
-![](inst/app/www/dashboard.gif)
-
-<small>[Link para testar o app na web](https://gomes555.shinyapps.io/acompanhacoes/)</small>
-
 ## Exemplo de input
 
 Para obter um exemplo de input para o dashboard, consulte os dados do pacote:
@@ -48,6 +34,21 @@ Para obter um exemplo de input para o dashboard, consulte os dados do pacote:
 ```
 
 Este não é meu portifólio e também não estou sugerindo esta opção de carteira. Para saber a origem deste input consulte o [post do meu blog](https://gomesfellipe.github.io/post/2020-03-25-investment-alert/investment-alert/) onde utilizo estes ativos como exemplo para a construção de uma carteira. A idéia é que o usuário entre com os dados do seu portifólio para cada compra efetuada.
+
+
+## Uso
+
+Após instalar o pacote, execute os comandos para executar o dashboard no R:
+
+``` r
+library(acompanhacoes)
+run_app()
+```
+Veja como é a tela do dashboard:
+
+![](inst/app/www/dashboard.gif)
+
+<small>[Link para testar o app na web](https://gomes555.shinyapps.io/acompanhacoes/)</small>
 
 A tabela financeira informa: 
 
