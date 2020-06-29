@@ -20,10 +20,10 @@ app_ui <- function(request) {
         
       ),
       mainPanel(
-        h2("Série Histórica:"),br(),
-        highchartOutput('plot1')%>% withSpinner(), br(),
         h2("Tabela Financeira"),
-        tableOutput("tab_financeira")%>% withSpinner()
+        tableOutput("tab_financeira")%>% withSpinner(),
+        h2("Série Histórica:"),br(),
+        highchartOutput('plot1')%>% withSpinner(), br()
       )
     )
   )

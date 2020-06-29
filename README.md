@@ -16,7 +16,7 @@ Sinta-se a vontade para utilizar, reproduzir e modificar o código. O dashboard 
 Para instalar a versão de desenvolvimento do aplicativo execute os comandos:
 
 ``` r
-devtools::install_github("gomesfellipe/acompanhacoes")
+devtools::install_github("gomesfellipe/acompanhacoes", INSTALL_opts = '--no-lock')
 ```
 
 ## Uso
