@@ -119,8 +119,9 @@ app_server <- function(input, output, session) {
 
   # Tabela financeira
   output$tab_financeira <- function() {
+    
     req(input$portfolio_file)
-
+    
     tab_financeira() %>%
       mutate_all(~ ifelse(is.na(.x), 0, .x)) %>%
       mutate(
