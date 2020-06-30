@@ -70,5 +70,5 @@ Limitação: A api fornecida pelo pacote `tidyquant` disponibiliza apenas os dad
 
 Próximos passos: A api do [AlphaVantage](https://www.alphavantage.co/) pode ser uma opção para a coleta dos dados das cotações em tempo real porém, como esta api necessita de uma chave de acesso particular para seu uso, a implementação ficará para atualizações futuras. 
 
-(idéias de implementações são bem vindas, caso tenha alguma idéia abra uma issue ou entre em contato pois será um prazer pensar em uma solução para isto de maneira conjunta.)
+(idéias de implementações são bem vindas, caso tenha alguma idéia abra uma *issue* ou entre em contato pois será um prazer pensar em uma solução para isto de maneira conjunta.)
 
