@@ -28,4 +28,6 @@ Depends:
     kableExtra,
     highcharter,
     shinycssloaders,
-    shinyWidgets
+    shinyWidgets,
+    shinythemes,
+    vov
