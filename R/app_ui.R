@@ -13,34 +13,57 @@ app_ui <- function(request) {
     # List the first level UI elements here
     navbarPage(
       theme = shinythemes::shinytheme("flatly"),
-      title = "Acompanhamento de Ações",
+      title = div( "Acompanhamento de Ações", tags$small("por Fellipe Gomes")),
       tabPanel(
-        "Resumo",
+        "Tabela Financeira",
         sidebarPanel(
           fileInput("portfolio_file", "Insira os dados do portifólio aqui", buttonLabel = "🔎", placeholder = "Buscar arquivos.."),
-          uiOutput("selecionar_stock"),
-          tags$b("Ajuda:"), downloadLink("input_test", "Exemplo de input"), br(),
           helpText(HTML(
             "<div align='justify'><p>Bem vindo ao Dashboard para acompanhamento 
-            automatizado de ações! Baixe o arquivo de exemplo e substitua os 
-            ativos de acordo com sua carteira (inclua a cotação no momento da
-            compra e a quantidade adquirida).</p>
+            automatizado de ações!</p>
             
-            <p> A requisição será feita 'através da api do 
-            <a href='https://finance.yahoo.com/'>Yahoo Finance</a> e uma tabela
-            financeira será calculada considerando o valor do ativo no fechamento
-            do dia anterior.</p></div>
+            <p> A requisição será feita através da api do 
+            <a href='https://finance.yahoo.com/'>Yahoo Finance</a>.</p></div>
             
             "),
-            div(align = "center", fade_in_down(img(src="https://storage.needpix.com/rsynced_images/stock-exchange-295648_1280.png", width="50%")))
+            fluidRow(
+              column(4, br(),div(align = "center", fade_in_down(img(src="https://storage.needpix.com/rsynced_images/stock-exchange-295648_1280.png", width="90%")))),
+              column(4, br(), div(align = "center", fade_in_down(img(src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Bovespa.svg/1280px-Bovespa.svg.png", width="90%"))),
+                     div(align = "center", fade_in_down(img(src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Yahoo_Finance_Logo_2019.svg/800px-Yahoo_Finance_Logo_2019.svg.png", width="90%")))),
+              column(4, div(align = "center", fade_in_down(img(src="https://cdn.pixabay.com/photo/2017/03/12/02/57/bitcoin-2136339_960_720.png", width="90%"))))
+            ),
+            div(tags$b("Ajuda:"), "É possível baixar um ",downloadLink("input_test", "exemplo de input"), " e substituir os valores conforme a sua carteira"), br()
+            
             )
         ),
         mainPanel(
-          fade_in_down(h2("Série Histórica:")), br(),
-          highchartOutput("plot1") %>% withSpinner(), br(),
           fluidRow(fade_in_down(h2("Tabela Financeira")), textOutput("ultimo_dia")), br(),
-          tableOutput("tab_financeira") %>% withSpinner(), br()
+          tableOutput("tab_financeira") %>% withSpinner(), br(),
+          helpText(tags$b("Obs"),".:Estas ações que aparecem como default não são do meu portfólio 
+                   e também não estou sugerindo esta opção de carteira.
+                   Para saber a origem deste input consulte" ,
+                   tags$a(href = "https://gomesfellipe.github.io/post/2020-03-25-investment-alert/investment-alert/",
+                          "este post"), "do meu blog"),br(),
+          fade_in_down(h2("Tabela Financeira (Totais)")), br(),
+          tableOutput("tab_financeira_total") %>% withSpinner(), br()
         )
+      ),
+      tabPanel(
+        "Ações",
+        sidebarPanel(
+          uiOutput("selecionar_stock"),
+          fluidRow(
+            column(4, br(),div(align = "center", fade_in_down(img(src="https://storage.needpix.com/rsynced_images/stock-exchange-295648_1280.png", width="90%")))),
+            column(4, br(), div(align = "center", fade_in_down(img(src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Bovespa.svg/1280px-Bovespa.svg.png", width="90%"))),
+                   div(align = "center", fade_in_down(img(src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Yahoo_Finance_Logo_2019.svg/800px-Yahoo_Finance_Logo_2019.svg.png", width="90%")))),
+            column(4, div(align = "center", fade_in_down(img(src="https://cdn.pixabay.com/photo/2017/03/12/02/57/bitcoin-2136339_960_720.png", width="90%"))))
+          ),
+        ),
+        mainPanel(
+          fade_in_down(h2("Série Histórica:")), br(),
+          highchartOutput("plot1") %>% withSpinner(), br()  
+        )
+        
       ),
       tags$footer(HTML("
       <footer class='page-footer font-large indigo'>

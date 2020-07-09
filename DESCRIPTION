@@ -8,8 +8,7 @@ Imports:
     config,
     golem,
     shiny,
-    htmltools,
-    pkgload
+    htmltools
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
@@ -31,3 +30,5 @@ Depends:
     shinyWidgets,
     shinythemes,
     vov
+URL: https://github.com/gomesfellipe/acompanhacoes
+BugReports: https://github.com/gomesfellipe/acompanhacoes/issues

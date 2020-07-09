@@ -7,5 +7,4 @@ input_exemplo <- dplyr::tribble(
   "BTC-USD", 31747.38, 0.032,
 )
 
-
 usethis::use_data(input_exemplo)
