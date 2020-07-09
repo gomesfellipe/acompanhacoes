@@ -34,6 +34,8 @@ app_server <- function(input, output, session) {
         unique() %>% 
         purrr::map_dfr(~quantmod::getQuote(.x) %>% 
                          tibble::rownames_to_column()) %>% 
+        mutate(`Trade Time` = format(`Trade Time`, tz="America/Sao_Paulo"),
+               `Trade Time` = ymd_hms(`Trade Time`)) %>% 
         dplyr::select(symbol = rowname, cot_atual = Last, date = `Trade Time`)
     })
   
@@ -55,25 +57,27 @@ app_server <- function(input, output, session) {
           vol_ini = cot_ini * qtd,
           vol_atual = cot_atual * qtd,
           ganho_perda = vol_atual - vol_ini,
-          resultado_bruto = round(ganho_perda / vol_ini * 100, 2)
+          resultado_bruto = round(ganho_perda / vol_ini * 100, 2),
+          date = format(date, "%d/%m%/%y %H:%M:%S")
         ) %>%
         select(
           symbol, cot_ini, qtd, vol_ini, cot_atual, qtd, vol_atual,
-          ganho_perda, resultado_bruto
+          ganho_perda, resultado_bruto, date
         )
     })
   
   
   # Formatar tabela financeira
   output$tab_financeira <- function() {
-    tab_financeira() %>%
+    tab_financeira()  %>% 
       mutate_all(~ ifelse(is.na(.x), 0, .x)) %>%
       mutate(
         cot_ini = moeda_real(cot_ini),
         cot_atual = moeda_real(cot_atual),
         vol_ini = moeda_real(vol_ini),
         vol_atual = moeda_real(vol_atual),
-        qtd = round(qtd, 4),
+        qtd =  ifelse(symbol == "BTC-USD", 
+                      format(qtd, digits = 4), format(qtd, digits = 0)),
         ` ` = ifelse(ganho_perda > 0, "\u2713", "\u2718"),
         cot_atual = cell_spec(cot_atual, "html", color = "blue"),
         ganho_perda = cell_spec(moeda_real(ganho_perda), "html",
@@ -90,7 +94,7 @@ app_server <- function(input, output, session) {
       `colnames<-`(c(
         "Ativo", "Cotação inicio", "Quantidade",
         "Volume Inicio", "Cotação atual", "Voluma atual",
-        "Ganho/Perda", "Resutado Bruto", "Status"
+        "Ganho/Perda", "Resutado Bruto","Coleta", "Status"
       )) %>%
       kable(format = "html", escape = F) %>%
       kable_styling(c("bordered", "hover", "responsive"),
@@ -98,8 +102,9 @@ app_server <- function(input, output, session) {
       ) %>%
       add_header_above(c(" ",
                          "Montagem" = 3,
-                         "Desmontagem / Atual" = 2, "Resultado" = 3
-      ))
+                         "Desmontagem / Atual" = 2, "Resultado" = 4)) %>%
+      scroll_box(width = "100%",
+                 box_css = "border: 0px solid #ddd; padding: 5px; ")
   }
   
   # Formatar tabela financeira total
@@ -143,7 +148,7 @@ app_server <- function(input, output, session) {
       mutate(
         vol_ini = moeda_real(vol_ini),
         vol_atual = moeda_real(vol_atual),
-        qtd = round(qtd, 4),
+        qtd = ifelse(soma == "BTC-USD", format(qtd, digits = 4), "-"),
         ` ` = ifelse(ganho_perda > 0, "\u2713", "\u2718"),
         ganho_perda = cell_spec(moeda_real(ganho_perda), "html",
                                 color = ifelse(ganho_perda > 0,
@@ -163,7 +168,9 @@ app_server <- function(input, output, session) {
       kable(format = "html", escape = F) %>%
       kable_styling(c("bordered", "hover", "responsive"),
                     full_width = T, font_size = 12
-      )
+      ) %>%
+      scroll_box(width = "100%",
+                 box_css = "border: 0px solid #ddd; padding: 5px; ")
     
   }
   
