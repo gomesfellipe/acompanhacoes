@@ -58,7 +58,7 @@ app_server <- function(input, output, session) {
           vol_atual = cot_atual * qtd,
           ganho_perda = vol_atual - vol_ini,
           resultado_bruto = round(ganho_perda / vol_ini * 100, 2),
-          date = format(date, "%d/%m%/%y %H:%M:%S")
+          date = format(date, "%d/%m/%y %H:%M:%S")
         ) %>%
         select(
           symbol, cot_ini, qtd, vol_ini, cot_atual, qtd, vol_atual,
