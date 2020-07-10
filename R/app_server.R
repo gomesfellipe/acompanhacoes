@@ -9,12 +9,51 @@ app_server <- function(input, output, session) {
   
   # Tabela financeira -------------------------------------------------------
   
+  auth <- reactive({
+    # Se o botao de vip nao for pressionado, nao valide a autenticacao
+    if(input$start_vip == F){
+      FALSE
+    }else{
+      req(input$go_vip)
+      # Caso contrario, tente ler o arquivo com as senhas: vip.rds
+      tryCatch({
+        isolate(input$password) %in% readRDS("vip.rds")     
+      }, error = function(e){
+        sendSweetAlert(
+          session = session,
+          title = "Erro...",
+          text = "Não foi possivel encontrar o arquivo vip.rds com a chave de acesso!",
+          type = "error"
+        )
+        return(FALSE)
+      })
+    }
+  })
+  
   # Leitura dos dados
   portfolio <- reactive({
     
+    # Se nenhum arquivo de portfolio for informado
     if(is.null(input$portfolio_file$datapath)){
       
-      acompanhacoes::input_exemplo
+      # Se a autenticacao nao for confirmada
+      if(auth() == FALSE){
+        acompanhacoes::input_exemplo  
+      }else{
+        # Caso contrario, tente ler o arquivo portfolio.txt localmente
+        tryCatch({
+          read.csv("portfolio.txt", stringsAsFactors = F) %>% as_tibble()    
+        }, error = function(e){
+          sendSweetAlert(
+            session = session,
+            title = "Erro...",
+            text = "Não foi possivel encontrar o arquivo portfolio.txt!",
+            type = "error"
+          )
+          acompanhacoes::input_exemplo  
+        })
+        
+      }
       
     }else{
       read.csv(input$portfolio_file$datapath, stringsAsFactors = F) %>%

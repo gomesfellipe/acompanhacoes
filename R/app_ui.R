@@ -17,7 +17,18 @@ app_ui <- function(request) {
       tabPanel(
         "Tabela Financeira",
         sidebarPanel(
+          textOutput("auth"),
           fileInput("portfolio_file", "Insira os dados do portifólio aqui", buttonLabel = "🔎", placeholder = "Buscar arquivos.."),
+          awesomeCheckbox(inputId = "start_vip", label = "Usuário vip?", value = FALSE),
+          conditionalPanel("input.start_vip",
+                           helpText("O usuário VIP possui acesso direto ao seu portfólio fornecendo sua chave de acesso"),
+                           tags$b("Insira sua chave de acesso:"), br(),
+                           fluidRow(
+                             column(8, passwordInput("password", NULL)),
+                             column(4, actionButton(inputId = "go_vip", label = "Validar"))
+                             )
+                           
+                           ),
           helpText(HTML(
             "<div align='justify'><p>Bem vindo ao Dashboard para acompanhamento 
             automatizado de ações!</p>
