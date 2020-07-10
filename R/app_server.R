@@ -242,7 +242,7 @@ app_server <- function(input, output, session) {
   # fornecer documento de input como exemplo
   output$input_test <- downloadHandler(
     filename = function() {
-      "input_test.txt"
+      "portfolio.txt"
     },
     content = function(con) {
       input_exemplo %>% write.csv(con, row.names = F)
