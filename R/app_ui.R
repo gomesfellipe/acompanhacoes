@@ -21,7 +21,9 @@ app_ui <- function(request) {
           fileInput("portfolio_file", "Insira os dados do portifólio aqui", buttonLabel = "🔎", placeholder = "Buscar arquivos.."),
           awesomeCheckbox(inputId = "start_vip", label = "Usuário vip?", value = FALSE),
           conditionalPanel("input.start_vip",
-                           helpText("O usuário VIP possui acesso direto ao seu portfólio fornecendo sua chave de acesso"),
+                           helpText("O usuário VIP possui acesso direto ao seu portfólio fornecendo sua chave de acesso. Para saber como configurar um Dashboard com sua chave de acesso consulte", 
+                                    tags$a(href = "https://github.com/gomesfellipe/acompanhacoes", 
+                                          "este link"), "."),
                            tags$b("Insira sua chave de acesso:"), br(),
                            fluidRow(
                              column(8, passwordInput("password", NULL)),

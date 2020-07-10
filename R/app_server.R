@@ -22,7 +22,8 @@ app_server <- function(input, output, session) {
         sendSweetAlert(
           session = session,
           title = "Erro...",
-          text = "Não foi possivel encontrar o arquivo vip.rds com a chave de acesso!",
+          text = div("Não foi possivel encontrar o arquivo vip.rds com a chave de acesso! Saiba mais ",
+                     tags$a(href = "https://github.com/gomesfellipe/acompanhacoes", "neste link")),
           type = "error"
         )
         return(FALSE)
@@ -47,7 +48,8 @@ app_server <- function(input, output, session) {
           sendSweetAlert(
             session = session,
             title = "Erro...",
-            text = "Não foi possivel encontrar o arquivo portfolio.txt!",
+            text = div("Não foi possivel encontrar o arquivo portfolio.txt! Saiba mais", 
+                       tags$a(href = "https://github.com/gomesfellipe/acompanhacoes", "neste link")),
             type = "error"
           )
           acompanhacoes::input_exemplo  
