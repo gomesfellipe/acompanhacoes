@@ -92,8 +92,7 @@ app_server <- function(input, output, session) {
         select(date, everything()) %>%
         mutate(cot_atual = if_else(symbol == "BTC-USD",
                                    cot_atual * quantmod::getQuote("USDBRL=X")[1, "Open"],
-                                   cot_atual
-        )) %>%
+                                   cot_atual)) %>%
         mutate(
           vol_ini = cot_ini * qtd,
           vol_atual = cot_atual * qtd,

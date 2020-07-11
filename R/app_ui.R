@@ -63,7 +63,7 @@ app_ui <- function(request) {
         br(), br()
       ),
       tabPanel(
-        "Ações",
+        "Estatísticas da carteira",
         div(
           fluidRow(
             column(8, 
