@@ -222,23 +222,89 @@ app_server <- function(input, output, session) {
     selectInput("stock", "Stocks", unique(portfolio()$symbol))
   })
   
-  # Serie historica da acao selecionada
-  output$plot1 <- renderHighchart({
-    
+  stocks <- reactive({
     first_day_year <- Sys.Date() %>% `year<-`(year(Sys.Date())-1)
     
-    stocks <- map_df(
+    map_df(
       unique(portfolio()$symbol),
       ~ tq_get(.x, get = "stock.prices", from = first_day_year)
     )
+  })
+  
+  # Serie historica da acao selecionada
+  output$plot1 <- renderHighchart({
     
-    stocks %>%
+    stocks() %>%
       mutate(date = as.Date(date)) %>% 
       filter(symbol == input$stock) %>%
       timetk::tk_xts(date_var = date) %>%
       highcharter::hchart()
   })
   
+  output$plot2 <- renderHighchart({
+    
+    stocks() %>%
+      mutate(date = as.Date(date)) %>% 
+      filter(symbol == input$stock) %>%
+      mutate(close = close - lag(close)) %>% 
+      na.omit() %>% 
+      pull(close) %>% 
+      hcdensity(name = input$stocktitle, showInLegend = F)
+  })
+  
+  
+  output$treemap_carteira <- renderHighchart({
+    
+  tm <- 
+    tab_financeira() %>% 
+    group_by(symbol) %>% 
+    summarise(vol = sum(!!as.name(input$vol_t))) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::mutate_if(is.character, as.factor) %>% 
+    treemap::treemap(index = c("symbol"),
+                     vSize = "vol", 
+                     vColor = "symbol",
+                     type = "categorical",
+                     palette = "Paired")
+  
+  graf <- highcharter::hctreemap(tm, allowDrillToNode = TRUE, layoutAlgorithm = "squarified") %>% 
+    highcharter::hc_tooltip(pointFormat = "<b>{point.name}</b>:<br>
+                            Valor atual: {point.value:,.0f}<br>
+                            Symbol: {point.valuecolor}")
+  
+  graf
+  
+  })
+
+  output$cor_carteira <- renderHighchart({
+    
+  stocks() %>% 
+    select(date, symbol, close) %>% 
+    tidyr::pivot_wider(names_from = symbol, values_from = close) %>% 
+    select(-date) %>% 
+    cor(method = "spearman", use = "complete.obs") %>% 
+    hchart_cor()
+  
+  })
+    
+    
+  output$assimetria <- renderHighchart({
+    
+    stocks() %>% 
+      group_by(symbol) %>% 
+      mutate(close = close - lag(close)) %>% 
+      summarise(skewness = skewness(close)) %>% 
+    hchart(type = "column", hcaes(x = symbol, y = skewness, color = symbol)) %>% 
+      # hc_title(text = "Assimetria por Ativo") %>% 
+      hc_xAxis(title = list(text = NULL)) %>% 
+      # hc_yAxis(title = list(text = "Assimetria")) %>% 
+      # hc_add_theme(hc_theme_google()) %>%
+      hc_tooltip(valueDecimals = 2,
+                 headerFormat = '<span style="font-size: 14px">{point.key}</span><br/>',
+                 pointFormat = '<span style="color:{point.color}">●</span> Assimetria: <b>{point.y}</b><br/>', 
+                 useHTML = TRUE)
+  })
+
   # Download exemplo de input -----------------------------------------------
   
   # fornecer documento de input como exemplo

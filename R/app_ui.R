@@ -51,31 +51,57 @@ app_ui <- function(request) {
         ),
         mainPanel(
           fluidRow(fade_in_down(h2("Tabela Financeira")), textOutput("ultimo_dia")), br(),
-          tableOutput("tab_financeira") %>% withSpinner(), br(),
-          helpText(tags$b("Obs"),".:Estas ações que aparecem como default não são do meu portfólio 
+          tableOutput("tab_financeira") %>% withSpinner(), 
+          helpText(tags$b("Obs.:"),"Estas ações que aparecem como default não são do meu portfólio 
                    e também não estou sugerindo esta opção de carteira.
                    Para saber a origem deste input consulte" ,
                    tags$a(href = "https://gomesfellipe.github.io/post/2020-03-25-investment-alert/investment-alert/",
                           "este post"), "do meu blog"),br(),
           fade_in_down(h2("Tabela Financeira (Totais)")), br(),
           tableOutput("tab_financeira_total") %>% withSpinner(), br()
-        )
+        ),
+        br(), br()
       ),
       tabPanel(
         "Ações",
-        sidebarPanel(
-          uiOutput("selecionar_stock"),
+        div(
           fluidRow(
-            column(4, br(),div(align = "center", fade_in_down(img(src="https://storage.needpix.com/rsynced_images/stock-exchange-295648_1280.png", width="90%")))),
-            column(4, br(), div(align = "center", fade_in_down(img(src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Bovespa.svg/1280px-Bovespa.svg.png", width="90%"))),
-                   div(align = "center", fade_in_down(img(src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Yahoo_Finance_Logo_2019.svg/800px-Yahoo_Finance_Logo_2019.svg.png", width="90%")))),
-            column(4, div(align = "center", fade_in_down(img(src="https://cdn.pixabay.com/photo/2017/03/12/02/57/bitcoin-2136339_960_720.png", width="90%"))))
-          ),
+            column(8, 
+                  fluidRow(
+                    column(6, fade_in_down(h2("Série Histórica:")), br()),
+                    column(6, br(), uiOutput("selecionar_stock"),br())
+                  ),
+                   highchartOutput("plot1") %>% withSpinner()),
+            column(4, 
+                   fade_in_down(h2("Distribuição da diferença:")), br(), br(), br(), 
+                   highchartOutput("plot2") %>% withSpinner())
+          )
+          , 
+          fluidRow(
+            column(4, 
+                   fade_in_down(h2("Distribuição da carteira por ativo:")), br(),
+                   prettyRadioButtons(
+                     inputId = "vol_t",
+                     label = "Momento do montante:", 
+                     choices = c(`Volume atual` = "vol_atual", `Volume inicial` = "vol_ini"),
+                     inline = TRUE, 
+                     status = "primary",
+                     fill = TRUE
+                   ),
+                   
+                   highchartOutput("treemap_carteira") %>% withSpinner() ),
+            column(4, 
+                   fade_in_down(h2("Correlação entre ativos:")), br(),
+                   br(), br(), br(),
+                   highchartOutput("cor_carteira") %>% withSpinner(),
+                   div(style = "text-align: right;", tags$small("Correlação de Spearman"))
+                   ),
+            column(4, fade_in_down(h2("Assimetria por ativo:")), br(),
+                   br(), br(), br(),
+                   highchartOutput("assimetria") %>% withSpinner())
+          )
         ),
-        mainPanel(
-          fade_in_down(h2("Série Histórica:")), br(),
-          highchartOutput("plot1") %>% withSpinner(), br()  
-        )
+        br(), br()
         
       ),
       tags$footer(HTML("
