@@ -29,6 +29,7 @@ Depends:
     shinycssloaders,
     shinyWidgets,
     shinythemes,
-    vov
+    vov,
+    treemap
 URL: https://github.com/gomesfellipe/acompanhacoes
 BugReports: https://github.com/gomesfellipe/acompanhacoes/issues

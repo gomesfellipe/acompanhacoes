@@ -30,6 +30,7 @@ usethis::use_package( "timetk", type = "Depends"  )
 usethis::use_package( "knitr", type = "Depends"  )
 usethis::use_package( "kableExtra", type = "Depends"  )
 usethis::use_package( "highcharter", type = "Depends"  )
+usethis::use_package( "treemap", type = "Depends"  )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
