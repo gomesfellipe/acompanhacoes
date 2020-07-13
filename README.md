@@ -1,6 +1,8 @@
 
 # acompanhacoes
 
+**Atenção:** App em desenvolvimento! O readme será atualizado assim que as novas funcionalidades forem incluídas com sucesso!
+
 O objetivo do pacote `acompanhacoes` é possibilitar a portabilidade do dashboard desenvolvido para o acompanhamento de ativos de diferentes naturezas. A idéia deste shiny foi inspirada [neste post](https://gomesfellipe.github.io/post/2020-03-25-investment-alert/investment-alert/) do meu blog.
 
 O dashboard é uma POC ([proof of concept](https://en.wikipedia.org/wiki/Proof_of_concept)) para o desenvolvimento de um dispositivo que possibilite a automação do acompanhamento de ativos de renda variável. 
