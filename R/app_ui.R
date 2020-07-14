@@ -49,7 +49,11 @@ app_ui <- function(request) {
             )
         ),
         mainPanel(
-          fluidRow(fade_in_down(h2("Tabela Financeira")), textOutput("ultimo_dia")), br(),
+          fluidRow(fade_in_down(h2("Tabela Financeira")), 
+                   column(4, div("Ultima coleta Bovespa: "),textOutput("ultima_coleta_bovespa")),
+                   column(4, div("Ultima coleta Bitcoin: "), textOutput("ultima_coleta_btc")),
+                   column(4, "")
+                   ), br(),
           tableOutput("tab_financeira") %>% withSpinner(), 
           
           conditionalPanel("input.start_vip == 0",

@@ -30,6 +30,7 @@ Depends:
     shinyWidgets,
     shinythemes,
     vov,
-    treemap
+    treemap,
+    glue
 URL: https://github.com/gomesfellipe/acompanhacoes
 BugReports: https://github.com/gomesfellipe/acompanhacoes/issues

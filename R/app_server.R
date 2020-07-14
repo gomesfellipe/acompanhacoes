@@ -80,8 +80,32 @@ app_server <- function(input, output, session) {
     })
   
   # Prrint data do dia
-  output$ultimo_dia <- renderText({
-    format(as.Date(fechamento_ultimo_dia()$date[1]), format = "%d/%m/%Y")
+  output$ultima_coleta_bovespa <- renderText({
+    
+    moment <- fechamento_ultimo_dia() %>% 
+      filter(symbol != "BTC-USD") %>% 
+      pull(date) %>% 
+      sort() %>% 
+      last()
+    
+    moment_dif <- format(ymd_hms(Sys.time()) - moment, format = "%M") 
+    
+    glue::glue("{as.character(moment)} (-{moment_dif})")
+    
+  })
+  
+  output$ultima_coleta_btc <- renderText({
+    
+    moment <- fechamento_ultimo_dia() %>% 
+      filter(symbol == "BTC-USD") %>% 
+      pull(date) %>% 
+      sort() %>% 
+      last() 
+    
+    moment_dif <- format(ymd_hms(Sys.time()) - moment, format = "%M") 
+    
+    glue::glue("{as.character(moment)} (-{moment_dif})")
+    
   })
   
   # Criar tabela financeita
