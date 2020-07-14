@@ -72,8 +72,14 @@ app_server <- function(input, output, session) {
     reactive({
       portfolio()$symbol %>% 
         unique() %>% 
-        purrr::map_dfr(~quantmod::getQuote(.x) %>% 
-                         tibble::rownames_to_column()) %>% 
+        purrr::map_dfr(~ tryCatch({
+          quantmod::getQuote(.x) %>% 
+            tibble::rownames_to_column()
+        }, error = function(e){
+          Sys.sleep(1)
+          quantmod::getQuote(.x) %>% 
+            tibble::rownames_to_column()
+        })) %>% 
         mutate(`Trade Time` = format(`Trade Time`, tz="America/Sao_Paulo"),
                `Trade Time` = ymd_hms(`Trade Time`)) %>% 
         dplyr::select(symbol = rowname, cot_atual = Last, date = `Trade Time`)
