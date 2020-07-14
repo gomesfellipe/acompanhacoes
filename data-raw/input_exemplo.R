@@ -8,3 +8,5 @@ input_exemplo <- dplyr::tribble(
 )
 
 usethis::use_data(input_exemplo)
+
+

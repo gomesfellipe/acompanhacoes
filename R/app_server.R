@@ -6,7 +6,6 @@
 #' @noRd
 app_server <- function(input, output, session) {
   
-  
   # Tabela financeira -------------------------------------------------------
   
   auth <- reactive({
@@ -106,7 +105,6 @@ app_server <- function(input, output, session) {
         )
     })
   
-  
   # Formatar tabela financeira
   output$tab_financeira <- function() {
     tab_financeira()  %>% 
@@ -119,15 +117,15 @@ app_server <- function(input, output, session) {
         qtd =  ifelse(symbol == "BTC-USD", 
                       format(qtd, digits = 4), format(qtd, digits = 0)),
         ` ` = ifelse(ganho_perda > 0, "\u2713", "\u2718"),
-        cot_atual = cell_spec(cot_atual, "html", color = "blue"),
+        cot_atual = cell_spec(cot_atual, "html", color = "#46b5d1"),
         ganho_perda = cell_spec(moeda_real(ganho_perda), "html",
                                 color = ifelse(ganho_perda > 0,
-                                               "green", "red"
+                                               "#29c7ac", "#e43f5a"
                                 )
         ),
         resultado_bruto = cell_spec(porcentagem(resultado_bruto), "html",
                                     color = ifelse(resultado_bruto > 0,
-                                                   "green", "red"
+                                                   "#29c7ac", "#e43f5a"
                                     )
         )
       ) %>%
@@ -192,12 +190,12 @@ app_server <- function(input, output, session) {
         ` ` = ifelse(ganho_perda > 0, "\u2713", "\u2718"),
         ganho_perda = cell_spec(moeda_real(ganho_perda), "html",
                                 color = ifelse(ganho_perda > 0,
-                                               "green", "red"
+                                               "#29c7ac", "#e43f5a"
                                 )
         ),
         resultado_bruto = cell_spec(porcentagem(resultado_bruto), "html",
                                     color = ifelse(resultado_bruto > 0,
-                                                   "green", "red"
+                                                   "#29c7ac", "#e43f5a"
                                     )
         )
       ) %>%
@@ -237,7 +235,8 @@ app_server <- function(input, output, session) {
       mutate(date = as.Date(date)) %>% 
       filter(symbol == input$stock) %>%
       timetk::tk_xts(date_var = date) %>%
-      highcharter::hchart()
+      highcharter::hchart() %>% 
+      hc_add_theme(hc_theme_darkunica())
   })
   
   output$plot2 <- renderHighchart({
@@ -248,7 +247,8 @@ app_server <- function(input, output, session) {
       mutate(close = close - lag(close)) %>% 
       na.omit() %>% 
       pull(close) %>% 
-      hcdensity(name = input$stocktitle, showInLegend = F)
+      hcdensity(name = input$stocktitle, showInLegend = F) %>% 
+      hc_add_theme(hc_theme_darkunica())
   })
   
   
@@ -269,7 +269,8 @@ app_server <- function(input, output, session) {
   graf <- highcharter::hctreemap(tm, allowDrillToNode = TRUE, layoutAlgorithm = "squarified") %>% 
     highcharter::hc_tooltip(pointFormat = "<b>{point.name}</b>:<br>
                             Valor atual: {point.value:,.0f}<br>
-                            Symbol: {point.valuecolor}")
+                            Symbol: {point.valuecolor}") %>% 
+    hc_add_theme(hc_theme_darkunica())
   
   graf
   
@@ -281,8 +282,9 @@ app_server <- function(input, output, session) {
     select(date, symbol, close) %>% 
     tidyr::pivot_wider(names_from = symbol, values_from = close) %>% 
     select(-date) %>% 
-    cor(method = "spearman", use = "complete.obs") %>% 
-    hchart_cor()
+    cor(method = "spearman", use = "na.or.complete") %>% 
+    hchart_cor() %>% 
+      hc_add_theme(hc_theme_darkunica())
   
   })
     
@@ -301,7 +303,8 @@ app_server <- function(input, output, session) {
       hc_tooltip(valueDecimals = 2,
                  headerFormat = '<span style="font-size: 14px">{point.key}</span><br/>',
                  pointFormat = '<span style="color:{point.color}">●</span> Assimetria: <b>{point.y}</b><br/>', 
-                 useHTML = TRUE)
+                 useHTML = TRUE) %>% 
+      hc_add_theme(hc_theme_darkunica())
   })
 
   # Download exemplo de input -----------------------------------------------
