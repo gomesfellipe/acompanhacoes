@@ -1,7 +1,6 @@
 
 # acompanhacoes
 
----
 
 **Atenção:** App em desenvolvimento! O readme será atualizado assim que as novas funcionalidades forem incluídas com sucesso!
 
