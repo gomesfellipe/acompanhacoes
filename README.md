@@ -1,7 +1,11 @@
 
 # acompanhacoes
 
+---
+
 **Atenção:** App em desenvolvimento! O readme será atualizado assim que as novas funcionalidades forem incluídas com sucesso!
+
+---
 
 O objetivo do pacote `acompanhacoes` é possibilitar a portabilidade do dashboard desenvolvido para o acompanhamento de ativos de diferentes naturezas. A idéia deste shiny foi inspirada [neste post](https://gomesfellipe.github.io/post/2020-03-25-investment-alert/investment-alert/) do meu blog.
 
@@ -68,9 +72,5 @@ A tabela financeira informa:
 
 ## Limitações e próximos passos
 
-Limitação: A api fornecida pelo pacote `tidyquant` disponibiliza apenas os dados do **dia anterior**. 
-
-Próximos passos: A api do [AlphaVantage](https://www.alphavantage.co/) pode ser uma opção para a coleta dos dados das cotações em tempo real porém, como esta api necessita de uma chave de acesso particular para seu uso, a implementação ficará para atualizações futuras. 
-
-(idéias de implementações são bem vindas, caso tenha alguma idéia abra uma *issue* ou entre em contato pois será um prazer pensar em uma solução para isto de maneira conjunta.)
+Veja a seção de [Projetos](https://github.com/gomesfellipe/acompanhacoes/projects)
 
