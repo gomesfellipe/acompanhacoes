@@ -70,14 +70,10 @@ Estes não são meus portfólio e também não estou sugerindo estas opções de
 
 ## Próximos passos
 
-<<<<<<< HEAD
 Para saber quais serão os próximos passos e saber como voc˜e pode contribuir com o desenvolvimento deste pacote consulte a aba de [Projects](https://github.com/gomesfellipe/acompanhacoes/projects) do github.
 
 O pacote ainda esta em fase de desenvolvimento e quando estiver completo será submetido ao CRAN!
 
 ## Licença
-=======
-Veja a seção de [Projetos](https://github.com/gomesfellipe/acompanhacoes/projects)
->>>>>>> 6202fd3c43608d253472c18b280ca94217f509dc
 
 Sinta-se a vontade para utilizar, reproduzir e modificar o código respeitando os [termos da licença](https://github.com/gomesfellipe/acompanhacoes/blob/master/LICENSE.md). 
