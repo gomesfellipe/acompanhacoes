@@ -44,7 +44,7 @@ Inicialmente será carregado um portfólio __arbitrário__ de exemplo, exibindo 
 |             | Quantidade      | Volume total da compra               | -                           |
 |             | Volume Inicio   |                                      | cot_ini * qtd               |
 | Desmontagem |                 |                                      |                             |
-|             | Cotacao Atual   | Valor do ativo no momento atual      | Coleta em tempo real        |
+|             | Cotacao Atual   | Valor do ativo no momento atual      | *real-time*                 |
 |             | Volume Atual    | Volume total atual                   | cot_atual * qtd             |
 | Resultado   |                 |                                      |                             |
 |             | Ganho/Perda     | Valor de ganho/perda caso venda hoje | vol_atual - vol_ini         |
@@ -59,9 +59,9 @@ Os dados das cotações serão coletados no momento do input do portfólio do us
 
 TODO
 
-### ⭐  **Usuário vip!**
+### **Usuário vip!** ⭐ 
 
-TODO
+TODO: vip.rds e arquivo com nome `portifolio_vip.txt`
 
 ## Disclaimer
 
@@ -70,7 +70,7 @@ Estes não são meus portfólio e também não estou sugerindo estas opções de
 
 ## Próximos passos
 
-Para saber quais serão os próximos passos e saber como voc˜e pode contribuir com o desenvolvimento deste pacote consulte a aba de [Projects](https://github.com/gomesfellipe/acompanhacoes/projects) do github.
+Para saber quais serão os próximos passos e saber como você pode contribuir com o desenvolvimento deste pacote consulte a aba de [Projects](https://github.com/gomesfellipe/acompanhacoes/projects) do github.
 
 O pacote ainda esta em fase de desenvolvimento e quando estiver completo será submetido ao CRAN!
 

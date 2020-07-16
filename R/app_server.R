@@ -42,7 +42,7 @@ app_server <- function(input, output, session) {
       }else{
         # Caso contrario, tente ler o arquivo portfolio.txt localmente
         tryCatch({
-          read.csv("portfolio.txt", stringsAsFactors = F) %>% as_tibble()    
+          read.csv(last(dir(pattern = "portfolio")), stringsAsFactors = F) %>% as_tibble()    
         }, error = function(e){
           sendSweetAlert(
             session = session,
