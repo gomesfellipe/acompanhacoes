@@ -94,9 +94,10 @@ app_server <- function(input, output, session) {
       sort() %>% 
       last()
     
-    moment_dif <- format(ymd_hms(Sys.time()) - moment, format = "%M") 
+    moment_dif <- format(ymd_hms(Sys.time()) - moment, format = "%M", digits = 2) 
     
-    glue::glue("{as.character(moment)} (-{moment_dif})")
+    glue::glue("{format(moment, format = '%d/%m/%y %H:%M:%S')} 
+               (-{moment_dif})")
     
   })
   
@@ -108,9 +109,10 @@ app_server <- function(input, output, session) {
       sort() %>% 
       last() 
     
-    moment_dif <- format(ymd_hms(Sys.time()) - moment, format = "%M") 
+    moment_dif <- format(ymd_hms(Sys.time()) - moment, format = "%M", digits = 2) 
     
-    glue::glue("{as.character(moment)} (-{moment_dif})")
+    glue::glue("{format(moment, format = '%d/%m/%y %H:%M:%S')} 
+               (-{moment_dif})")
     
   })
   
@@ -284,48 +286,48 @@ app_server <- function(input, output, session) {
   
   output$treemap_carteira <- renderHighchart({
     
-  tm <- 
-    tab_financeira() %>% 
-    group_by(symbol) %>% 
-    summarise(vol = sum(!!as.name(input$vol_t))) %>% 
-    dplyr::ungroup() %>% 
-    dplyr::mutate_if(is.character, as.factor) %>% 
-    treemap::treemap(index = c("symbol"),
-                     vSize = "vol", 
-                     vColor = "symbol",
-                     type = "categorical",
-                     palette = "Paired")
-  
-  graf <- highcharter::hctreemap(tm, allowDrillToNode = TRUE, layoutAlgorithm = "squarified") %>% 
-    highcharter::hc_tooltip(pointFormat = "<b>{point.name}</b>:<br>
+    tm <- 
+      tab_financeira() %>% 
+      group_by(symbol) %>% 
+      summarise(vol = sum(!!as.name(input$vol_t))) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::mutate_if(is.character, as.factor) %>% 
+      treemap::treemap(index = c("symbol"),
+                       vSize = "vol", 
+                       vColor = "symbol",
+                       type = "categorical",
+                       palette = "Paired")
+    
+    graf <- highcharter::hctreemap(tm, allowDrillToNode = TRUE, layoutAlgorithm = "squarified") %>% 
+      highcharter::hc_tooltip(pointFormat = "<b>{point.name}</b>:<br>
                             Valor atual: {point.value:,.0f}<br>
                             Symbol: {point.valuecolor}") %>% 
-    hc_add_theme(hc_theme_darkunica())
-  
-  graf
-  
+      hc_add_theme(hc_theme_darkunica())
+    
+    graf
+    
   })
-
+  
   output$cor_carteira <- renderHighchart({
     
-  stocks() %>% 
-    select(date, symbol, close) %>% 
-    tidyr::pivot_wider(names_from = symbol, values_from = close) %>% 
-    select(-date) %>% 
-    cor(method = "spearman", use = "na.or.complete") %>% 
-    hchart_cor() %>% 
+    stocks() %>% 
+      select(date, symbol, close) %>% 
+      tidyr::pivot_wider(names_from = symbol, values_from = close) %>% 
+      select(-date) %>% 
+      cor(method = "spearman", use = "na.or.complete") %>% 
+      hchart_cor() %>% 
       hc_add_theme(hc_theme_darkunica())
-  
+    
   })
-    
-    
+  
+  
   output$assimetria <- renderHighchart({
     
     stocks() %>% 
       group_by(symbol) %>% 
       mutate(close = close - lag(close)) %>% 
       summarise(skewness = skewness(close)) %>% 
-    hchart(type = "column", hcaes(x = symbol, y = skewness, color = symbol)) %>% 
+      hchart(type = "column", hcaes(x = symbol, y = skewness, color = symbol)) %>% 
       # hc_title(text = "Assimetria por Ativo") %>% 
       hc_xAxis(title = list(text = NULL)) %>% 
       # hc_yAxis(title = list(text = "Assimetria")) %>% 
@@ -336,7 +338,7 @@ app_server <- function(input, output, session) {
                  useHTML = TRUE) %>% 
       hc_add_theme(hc_theme_darkunica())
   })
-
+  
   # Download exemplo de input -----------------------------------------------
   
   # fornecer documento de input como exemplo
@@ -348,6 +350,12 @@ app_server <- function(input, output, session) {
       input_exemplo %>% write.csv(con, row.names = F)
     }
   )
+  
+  # TImer -------------------------------------------------------------------
+  output$currentTime <- renderText({
+    invalidateLater(1000, session)
+    paste("Hora atual: ", format(Sys.time(), format = "%d/%m/%y %H:%M"))
+  })
   
   
 }
