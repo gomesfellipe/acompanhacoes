@@ -133,6 +133,14 @@ Parabéns! Se chegou té aqui agora você possui um Dashboard com um panorama ge
 
 **Dica**: Caso queria publicar esse dashboard com 1 linha de código basta criar um usuário no site <https://www.shinyapps.io/>, seguir a instruções e subir a aplicação utilizando `rsconnect::deployApp()`.
 
+## Estatísticas da carteira
+
+Esta seção ainda esta em desenvolvimento e totalmente aberta à sugestões. Veja como é a tela de Estatísticas da carteira:
+
+![](inst/app/www/analytics.gif)
+
+(Em desenvolvimento)
+
 ## Disclaimer
 
 Os arquivos aqui apresentados não representam meu portfólio e também não estou sugerindo estas opções de carteiras. Para saber a origem deste input consulte o [post do meu blog](https://gomesfellipe.github.io/post/2020-03-25-investment-alert/investment-alert/) onde utilizo estes ativos como exemplo na construção de uma portfólio fictício. A idéia é que o usuário entre com os dados do seu portfólio para cada compra efetuada.
