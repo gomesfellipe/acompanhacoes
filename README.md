@@ -57,11 +57,11 @@ A próxima seção trará as informações necessárias para se realizar a carga
 
 ## Input
 
-O dashboard tem 3 comportamentos quanto ao input dos dados:
+O dashboard tem 3 abordagens quanto ao input dos dados:
 
 1. **Sem input**: O dashboard vai carregar a carteira exemplo que utilizei [neste post](https://gomesfellipe.github.io/post/2020-03-25-investment-alert/investment-alert/) do meu blog;
 2. **Input manual**: O dashboard vai exibir as estatísticas baseadas no input do usuário;
-3. **Usuário vip**: O dashboard vai exibir a carteira "reservada", pré-definida pelo desenvolvedor, após fornecer uma shave de acesso. 
+3. **Usuário vip**: O dashboard vai exibir a carteira "reservada", pré-definida pelo desenvolvedor, após fornecer sua chave de acesso. 
 
 Sempre que alguma dessas três ações forem executadas, os dados das cotações informadas no input serão coletados utilizando funções do pacote [`quantmod`](https://cran.r-project.org/web/packages/quantmod/), que fornecem as cotações via api do [Yahoo Finance](https://finance.yahoo.com/).
 
@@ -81,6 +81,8 @@ O Dashboard carrega o conjunto de dados `acompanhacoes::input_exemplo` no moment
 3 BTC-USD  31747.    0.032
 ```
 
+Obs.: Carteira elaborada de forma **arbitrária** para servir como exemplo
+
 ### 2. Input manual
 
 O arquivo fornecido como input para o Dashboard precisa conter a palavra "portfolio" (como por exemplo: `input_portfolio.txt`) e estar no seguinte formato:
@@ -97,11 +99,11 @@ BTC-USD, 31747, 0.032
 BTC-USD, 49499.37, 0.0101
 ```
 
-Após definir sua cateira com os valores pagos no momento da compra e informar a quantidade comprada clique na lupa 🔎 para buscar o arquivo ou arraste para o campo indicado:
+Após definir sua cateira com os valores pagos no momento da compra e informar a quantidade comprada clique na lupa 🔎  para buscar o arquivo ou arraste para o campo indicado:
 
 ![](inst/app/www/input_manual.gif)
 
-Após isso os resultados serão exibidos em tempo real de forma automática. 
+Sendo assim, os resultados serão exibidos em tempo real de forma automática. 
 
 Obs.: O exemplo apresentado no gif é do arquivo [`portfolio_vip.txt`](https://github.com/gomesfellipe/acompanhacoes/blob/master/portfolio_vip.txt), que é carteira elaborada de forma **arbitrária** para servir como exemplo.
 
