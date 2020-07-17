@@ -21,6 +21,12 @@ Para instalar a versão de desenvolvimento do aplicativo execute o comando:
 devtools::install_github("gomesfellipe/acompanhacoes", INSTALL_opts = '--no-lock')
 ```
 
+Ou faça o download da pasta do repositório e execute:
+
+``` r
+devtools::install("/path_to/acompanhacoes")
+```
+
 ## Uso
 
 Após instalar o pacote, execute os comandos para executar o dashboard no R:
