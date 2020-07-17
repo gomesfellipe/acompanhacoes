@@ -139,6 +139,8 @@ Os arquivos aqui apresentados não representam meu portfólio e também não est
 
 A responsabilidade de manter a privacidade da carteira é totalmente do usuário, mantenha o arquivo `portifolio_vip.txt` salvo em seu computador local e caso use controle de versões inclua este arquivo no seu arquivo `.gitignore`.
 
+Nenhum arquivo inputado será persistido.
+
 ## Próximos passos
 
 Para saber quais serão os próximos passos e saber como você pode contribuir com o desenvolvimento deste pacote consulte a aba de [Projects](https://github.com/gomesfellipe/acompanhacoes/projects) do github.
