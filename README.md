@@ -39,16 +39,13 @@ Assim que o dashboard for aberto, serão exibidos resultados para um portfólio 
 
 | Campo       | Subcampo        | Descrição                            | Medotologia                   |
 | ----------: | :-------------- | :----------------------------------- | :---------------------------- |
-| Montagem    |                 |                                      |                               |
-|             | Cotação inicio  | Valor no momento da compra           | *input*                       |
-|             | Quantidade      | Quantidade de lotes comprados        | *input*                       |
-|             | Volume Inicio   | Volume total da compra               | `cot_ini * qtd`               |
-| Desmontagem |                 |                                      |                               |
-|             | Cotacao Atual   | Valor do ativo no momento atual      | *real-time*                   |
-|             | Volume Atual    | Volume total atual                   | `cot_atual * qtd`             |
-| Resultado   |                 |                                      |                               |
-|             | Ganho/Perda     | Valor de ganho/perda caso venda hoje | `vol_atual - vol_ini`         |
-|             | Resultado Bruno | Porcentagem de lucro                 | `ganho_perda / vol_ini * 100` |
+| Montagem | Cotação inicio  | Valor no momento da compra           | *input*                       |
+| Montagem | Quantidade      | Quantidade de lotes comprados        | *input*                       |
+| Montagem | Volume Inicio   | Volume total da compra               | `cot_ini * qtd`               |
+| Desmontagem | Cotacao Atual   | Valor do ativo no momento atual      | *real-time*                   |
+| Desmontagem | Volume Atual    | Volume total atual                   | `cot_atual * qtd`             |
+| Resultado | Ganho/Perda     | Valor de ganho/perda caso venda hoje | `vol_atual - vol_ini`         |
+| Resultado | Resultado Bruno | Porcentagem de lucro                 | `ganho_perda / vol_ini * 100` |
 
 A próxima seção trará as informações necessárias para se realizar a carga no Dashboad.
 
@@ -85,8 +82,13 @@ O arquivo fornecido como input para o Dashboard precisa conter a palavra "portfo
 ```
 symbol, cot_ini, qtd
 TUPY3.SA, 24.4, 200    
-ELET3.SA, 19.7, 150    
+ELET3.SA, 19.7, 150
+PTBL3.SA, 5.80, 100     
+MGLU3.SA, 35.33, 100
+TOTS3.SA, 19.28, 200
+BTC-USD, 28000, 0.01
 BTC-USD, 31747, 0.032
+BTC-USD, 49499.37, 0.0101
 ```
 
 Após definir sua cateira com os valores pagos no momento da compra e informar a quantidade comprada clique na lupa 🔎 para buscar o arquivo ou arraste para o campo indicado:
