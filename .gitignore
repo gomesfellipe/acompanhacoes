@@ -7,4 +7,6 @@ rsconnect/
 portfolio.txt
 vip.rds
 inst/app/www/dashboard.mov
-inst/app/www/dashboard.mp4.DS_Store
+inst/app/www/dashboard.mp4
+inst/app/www/dashboard2.mp4
+.DS_Store
