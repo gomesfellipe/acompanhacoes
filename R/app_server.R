@@ -260,6 +260,7 @@ app_server <- function(input, output, session) {
     )
   })
   
+  
   # Serie historica da acao selecionada
   output$plot1 <- renderHighchart({
     
@@ -351,11 +352,77 @@ app_server <- function(input, output, session) {
     }
   )
   
-  # TImer -------------------------------------------------------------------
+  # Timer -------------------------------------------------------------------
   output$currentTime <- renderText({
     invalidateLater(1000, session)
     paste("Hora atual: ", format(Sys.time(), format = "%d/%m/%y %H:%M"))
   })
   
+  #####################################
+  ### adicionar input$periodo na UI ###
+  #####################################
+  
+  # ajustes do input de PERIODO p/ os calculos em XTS
+  periodo_xts <- eventReactive(input$go, ignoreNULL = FALSE, {
+    if(input$periodo == "Mensal"){
+      periodo_xts <- "months"
+    } else if(input$periodo == "Semanal"){
+      periodo_xts <- "weeks"
+    } else {
+      periodo_xts <- "years"
+    }
+  })
+  # ajustes do input de PERIODO p/ os calculos em TIDY
+  periodo_tidy <- eventReactive(input$go, ignoreNULL = FALSE, {
+    if(input$periodo == "Mensal"){
+      periodo_tidy <- "monthly"
+    } else if(input$periodo == "Semanal"){
+      periodo_tidy <- "weekly"
+    } else {
+      periodo_tidy <- "yearly"
+    }
+  })
+  
+  ##################
+  ### XTS - WIDE ###
+  ##################
+  
+  # PRECOS ajustados - seman/mes/ano
+  preco_periodo  <- eventReactive(input$go, ignoreNULL = FALSE, {
+    preco_periodo <- stocks() %>% 
+      select(symbol, date, adjusted) %>% 
+      spread(key = symbol, value = adjusted) %>% 
+      column_to_rownames("date") %>% 
+      to.period(indexAt = "lastof", OHLC = 0,
+                period = periodo_xts())
+  })  
+  # LOG-RETORNOS ajustados - seman/mes/ano
+  log_ret_sem_xts  <- eventReactive(input$go, ignoreNULL = FALSE, {
+    log_ret_sem_xts <- preco_periodo() %>% 
+      PerformanceAnalytics::Return.calculate(method = "log") %>% 
+      na.omit()
+  })
+  
+  ###################
+  ### TIDY - LONG ###
+  ###################
+
+  # PRECOS ajustados - seman/mes/ano
+  preco_periodo_tidy <- eventReactive(input$go, ignoreNULL = FALSE, {
+    preco_periodo_tidy <- stocks() %>% 
+      select(symbol, date, adjusted) %>%
+      group_by(symbol) %>% 
+      tq_transmute(select = adjusted,
+                   mutate_fun = to.period, # xts function
+                   period = periodo_xts())
+  })
+  # LOG-RETORNOS ajustados - seman/mes/ano
+  log_ret_periodo <- eventReactive(input$go, ignoreNULL = FALSE, {
+    log_ret_periodo <- preco_periodo_tidy() %>% 
+      tq_transmute(select = adjusted,
+                   mutate_fun = periodReturn, #quantmod function
+                   period = periodo_tidy(),
+                   type="log")
+  })
   
 }
