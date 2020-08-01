@@ -1,0 +1,337 @@
+---
+title: "Calculando Retornos do Portfolio"
+# author: "Untitled"
+# date: "XX/07/2020"
+output:
+  # rmarkdown::html_document:
+  #   theme: readable
+  prettydoc::html_pretty:
+      theme: cayman
+---
+
+```{r setup, include=FALSE, results='hide',warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE, include = TRUE, warning = FALSE, message = FALSE)
+```
+
+
+```{r, include=TRUE, results='hide',warning=FALSE, message=FALSE}
+library(tidyverse)
+library(tidyquant)
+library(highcharter)
+# devtools::install_github("gomesfellipe/acompanhacoes", INSTALL_opts = '--no-lock')
+# library(acompanhacoes)
+```
+
+## 1.0 - INPUTS
+
+### 1.1 - Portfolio do usuario
+```{r}
+# portfolio <- acompanhacoes::input_exemplo
+portfolio <- read.csv("../portfolio_vip.txt", header= 1, stringsAsFactors= 0)
+portfolio %>% glimpse()
+```
+
+### 1.2 - Historico de precos dos ativos
+```{r}
+first_day_year <- Sys.Date() %>% `year<-`(year(Sys.Date())-5)  
+  
+stocks <- purrr::map_df(.x = unique(portfolio$symbol),
+                        .f = ~ tq_get(.x,
+                                      get= "stock.prices",
+                                      from= first_day_year)
+                        )
+
+glimpse(stocks)
+```
+
+### 1.3 - Periodicidade escolhida pelo usuario. (sem/mes/trim/ano)
+
+Com o input do usuario geramos duas variaveis que serao utilizadas como input dos calculos do portfolio.
+```{r}
+input_periodo <- "Mensal" # Opcoes: Semanal, Mensal, Trimestral, Anual
+```
+
+É necessario trabalharmos em dois 'universos' de dados para efetuarmos todos os calculos e graficos. O **Tidyverse**, no formato *long*, e o **XTS**, no formato *wide*. Desse modo,cada etapa de tratamento dos dados executaremos dois codigos, um para cada 'universo'.
+ 
+```{r}
+# ajustes do input de periodo p/ os calculos em XTS
+if(input_periodo == "Mensal"){
+  periodo_xts <- "months"
+} else if(input_periodo == "Semanal"){
+  periodo_xts <- "weeks"
+} else {
+  periodo_xts <- "years"
+}
+# ajustes do input de periodo p/ os calculos em TIDY
+if(input_periodo == "Mensal"){
+  periodo_tidy <- "monthly"
+} else if(input_periodo == "Semanal"){
+  periodo_tidy <- "weekly"
+} else {
+  periodo_tidy <- "yearly"
+}
+```
+
+### 1.4 - Janela Movel escolhida pelo usuario
+```{r}
+input_window <- 6
+```
+
+***
+
+## 2.0 - AGREGANDO LOG-RETORNOS
+
+### 2.1 - Preços ajustados em sem/mes/trim/ano
+#### 2.1.1 - XTS (Wide)
+```{r}
+preco_periodo <- 
+  stocks %>% 
+  select(symbol, date, adjusted) %>% 
+  spread(key = symbol, value = adjusted)
+
+preco_periodo <- 
+  timetk::tk_xts(data = preco_periodo, 
+                 select = names(preco_periodo)[2:length(preco_periodo)],
+                 date_var = date,
+                 silent = TRUE) %>% 
+  to.period(period = periodo_xts, indexAt = "lastof", OHLC = 0)
+
+head(preco_periodo) # xts 
+```
+No formato wide,a data é o nome da linha da tabela xts.
+
+#### 2.1.2 - TIDY (Long)
+```{r}
+preco_periodo_tidy <- stocks %>%
+  rename(ativo = symbol) %>% 
+  select(ativo, date, adjusted) %>%
+  group_by(ativo) %>% 
+  tq_transmute(select = adjusted,
+               mutate_fun = to.period,  # xts function
+               period = periodo_xts)    # input de tempo do usuario
+
+preco_periodo_tidy # tibble
+```
+
+***
+
+### 2.2 -  Log-Retornos ajustados em sem/mes/trim/ano
+#### 2.2.1 - XTS (Wide)
+```{r}
+log_ret_xts <- preco_periodo %>% 
+  PerformanceAnalytics::Return.calculate(method = "log") %>% 
+  na.omit()
+
+head(log_ret_xts) # xts
+```
+
+#### 2.2.2 - TIDY (Long)
+```{r}
+log_ret_periodo <- preco_periodo_tidy %>% 
+  tq_transmute(select = adjusted,
+               mutate_fun = periodReturn, # quantmod function
+               period = periodo_tidy,     # input de tempo do usuario
+               type="log",
+               col_rename = "retornos")
+
+head(log_ret_periodo) # tibble
+```
+
+***
+
+## 3.0 - PORTFOLIO
+
+### 3.1 - PESOS de cada ativo
+```{r}
+# pesos no inicio do portfólio
+pesos_ini <- portfolio %>% 
+  rename(ativo = symbol) %>% 
+  mutate(VM = cot_ini*qtd) %>% # VM: Valor de Mercado 
+  group_by(ativo) %>% 
+  summarise(VM = sum(VM)) %>% 
+  mutate(pesos = VM/sum(VM)) %>% 
+  select(-VM)
+pesos_ini # tibble
+```
+
+### 3.2 - LOG-RETORNOS do portfolio
+#### 3.2.1 - XTS (Wide)
+```{r}
+Rp_wide <- 
+    log_ret_xts %>% 
+    Return.portfolio(weights = pesos_ini$pesos,
+                     rebalance_on = periodo_xts) %>% 
+    `colnames<-`("Rp")
+
+head(Rp_wide)
+```
+
+#### 3.2.2 - TIDY (Long)
+```{r}
+Rp_long <- log_ret_periodo %>% 
+  tq_portfolio(assets_col = ativo,
+               returns_col = retornos,
+               weights = pesos_ini,
+               col_rename = "Rp")
+head(Rp_long)
+```
+
+***
+
+## 4.0 - GRAFICOS
+
+### 4.1 - Log-Retorno historico
+```{r}
+log_ret_periodo %>% 
+  mutate(retornos = retornos*100) %>% 
+  hchart(., type = "line",
+         hcaes(x = date,y = retornos, group = ativo)) %>% 
+  hc_plotOptions(line = list(marker = list(enabled = FALSE, opacity = 0.1))) %>% 
+  hc_colors(colors = RColorBrewer::brewer.pal(n = length(unique(log_ret_periodo$ativo)),
+                                              name = "Pastel1")) %>%
+  hc_add_series(Rp_wide$Rp*100, 
+                name = "Portfólio",
+                color = "#000000",
+                type = "line",
+                marker = list(opacity = 1)) %>% 
+  hc_title(text = paste0("Log-Retorno ", input_periodo, " do Portfólio")) %>%
+  hc_yAxis(opposite = TRUE,
+           plotLines = list(list(
+             value = 0,
+             width = 2,
+             color = "black",
+             dashStyle = "dash")),
+           labels = list(format = "{value:.0f}%"),
+           title = list(text = paste0("Log-Retorno ", input_periodo))) %>% 
+  hc_xAxis(title = list(text = NULL),
+           labels = list(format = "{value:%Y-%m}")) %>% 
+  hc_add_theme(hc_theme_google()) %>%
+  hc_tooltip(shared = TRUE,
+             useHTML = TRUE,
+             headerFormat = "<b>{point.x:%Y/%m/%d}</b><table>",
+             # pointFormat = '<tr><td style="text-align: right"><b>{series.name}: </b></td>
+             pointFormat = '<tr><td style="color: {series.color}"><b>{series.name}: </b></td>
+               <td style="text-align: right"><b>{point.y: .2f} %</b></td></tr>',
+             footerFormat = "</table>",
+             xDateFormat = "%y/%m/%d") %>%
+  hc_legend(enabled = TRUE) %>% 
+  hc_navigator(enabled = TRUE) %>% 
+  hc_scrollbar(enabled = FALSE) %>% 
+  hc_exporting(enabled = TRUE)
+```
+
+
+### 4.2 - Log-Retorno x Desvio Padrao
+```{r}
+sd_sum <- 
+  log_ret_periodo %>%
+  group_by(ativo) %>%
+  summarise(ret = mean(retornos),
+            sd = sd(retornos)) %>%
+  add_row(ativo = "Portfolio",
+          ret = mean(Rp_long$Rp),
+          sd = sd(Rp_long$Rp))
+
+hchart(sd_sum, type = "scatter",
+           hcaes(x = sd, y = ret, group = ativo)) %>% 
+    hc_plotOptions(scatter = list(marker = list(radius = 10))) %>% 
+    hc_xAxis(title = list(text = "Desvio Padrão")) %>% 
+    hc_title(text = "Log-Retorno x Desvio Padrão") %>% 
+    hc_yAxis(title = list(text = "Log-Retorno"),
+             plotLines = list(list(
+               value = 0,
+               width = 2,
+               color = "black",
+               dashStyle = "dash"))) %>% 
+    hc_legend(enabled = TRUE) %>% 
+    hc_annotations(list(
+      labels = list(
+        list(point = list(
+          x = sd(Rp_long$Rp),
+          y = mean(Rp_long$Rp)*1.03,
+          xAxis = 0, yAxis = 0), text = "Portfólio")))) %>%
+    hc_tooltip(shared = TRUE,
+               headerFormat = '<span style="font-size: 14px"><b>{series.name}</b></span><br/>',
+               pointFormat = 'Log-Ret: <b>{point.y:.2f}</b><br> DesvPad: <b>{point.x:.2f}</b>')
+```
+
+### 4.2 - Matriz de Correlacao
+```{r}
+hchart(round(cor(log_ret_xts),2),label = TRUE) %>%
+  hc_plotOptions(heatmap = list(dataLabels = list(style = list(fontSize = "16px",
+                                                               textOutline = "1px contrast",
+                                                               color = "black")))) %>%
+  hc_legend(align = "right", layout = "vertical", margin = 0,
+            verticalAlign = "top", y = 25, symbolHeight = 280) %>%
+  hc_title(text = "Matriz de Correlação")
+```
+
+### 4.3 - Histograma dos Retornos (Ativos + Portfolio)
+```{r}
+font_ggplot <- "LucidaSansUnic"
+cbp2 <- tidyquant::palette_light()[ 1 :(length(unique(log_ret_periodo$ativo)) + 1)] %>% 
+  as.character() # Vetor de paleta de cores
+
+log_ret_periodo %>% 
+    spread(key = ativo, value = retornos) %>% 
+    add_column(Portfolio = Rp_long$Rp) %>% 
+    gather(key = "ativo", value = "retornos", -date) %>% 
+  
+  ggplot(aes(x = retornos,fill = ativo, colour = ativo)) +
+    geom_density(alpha = 0.25, size = 1) +
+    xlab("Log-Retornos %") + ylab(NULL) +
+    # ggtitle("Distribuição dos Log-Retornos Mensais") +
+    # theme_classic() +
+    facet_wrap(~ativo) +
+    scale_color_manual(values = cbp2, aesthetics = c("color","fill")) +
+    theme_minimal() + 
+    theme(plot.title = element_text(hjust = 0.5),
+          legend.position = "none",
+          text = element_text(family = font_ggplot))
+```
+
+### 4.4 - Assimetria por Ativo
+```{r}
+skew_sum <- 
+      log_ret_periodo %>% 
+      group_by(ativo) %>% 
+      summarise(skewness = skewness(retornos)) %>% 
+      add_row(ativo = "Portfolio",
+              skewness = skewness(Rp_long$Rp))
+
+hchart(skew_sum, type = "column",
+           hcaes(x = ativo, y = skewness, color = ativo)) %>% 
+    hc_title(text = "Assimetria por Ativo") %>% 
+    hc_xAxis(title = list(text = NULL)) %>% 
+    hc_yAxis(title = list(text = "Assimetria")) %>% 
+    # hc_add_theme(hc_theme_google()) %>%
+    hc_tooltip(valueDecimals = 2,
+               headerFormat = '<span style="font-size: 14px">{point.key}</span><br/>',
+               pointFormat = '<span style="color:{point.color}">●</span> Assimetria: <b>{point.y}</b><br/>', 
+               useHTML = TRUE)
+```
+Este grafico pode ser reproduzido para a curtose, alterando a função do cálculo `skewness()` para `kurtosis()`.
+
+### 4.5 - DesvioPadrao/Assim/Curtose Móvel
+```{r}
+rolling_sd <- 
+  rollapply(Rp_wide,
+            FUN = sd,
+            width = input_window) %>% 
+  na.omit()
+
+highchart(type = "stock") %>% 
+  hc_add_series(rolling_sd,
+                name = "Desvio Padrão Móvel",
+                lineWidth = 5) %>% 
+  hc_title(text = paste0("Desvio Padrão Móvel de ",
+                         input_window, # input do usuario
+                         " Períodos do Portfólio")) %>% 
+  hc_yAxis(title = list(text = "Desvio Padrão"),
+           opposite = FALSE) %>%
+  hc_tooltip(pointFormat = '<span style="color:{point.color}">●</span> Desvio Padrão: <b>{point.y: .2f}</b><br/>') %>% 
+  hc_navigator(enabled = FALSE) %>%
+  hc_scrollbar(enabled = FALSE) %>%
+  hc_exporting(enabled = TRUE)
+```
+Este grafico pode ser reproduzido para a assimetria e curtose, alterando a função `sd`, aplicada no `rollaply()`, para `skewness` e/ou `kurtosis`.
